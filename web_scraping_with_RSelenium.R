@@ -1,9 +1,9 @@
 #codigo para pesquisa no site @sançoes
 
 
-library("tidyverse")
-library("RSelenium")
-library("netstat")
+library(tidyverse)
+library(RSelenium)
+library(netstat)
 
 
 rs_driver_object <- rsDriver(browser = "firefox",
@@ -20,11 +20,11 @@ cnpj_list <- c(45039237000114,27865757000102,12546935000157,07065868000119,60701
 
 funcao_sancoes <- function(cnpj_empresas){
   remDr$navigate(site_sancoes)
-  remDr$findElement(using= "id", "txtCNPJCPF")$sendKeysToElement(c(cnpj_empresas, key = "enter"))
+  remDr$findElement(using= "id", "txtCNPJCPF")$sendKeysToElement(c(32232246884, key = "enter"))
   Sys.sleep(2)
-  if(substr(remDr$findElement(using='css selector', 'table.styled:nth-child(3) > tbody:nth-child(1)')$getElementText(), 67, 95)=="Não foram encontradas sanções"){
+  if(substr(remDr$findElement(using='css selector', 'table.styled:nth-child(3) > tbody:nth-child(1)')$getElementText(), 74, 102)=="Não foram encontradas sanções"){
     print("ok")
   }else {print("pendencia")}
   }
 
-results <- sapply (cnpj_list, FUN = funcao_sancoes)
+results <- sapply(cnpj_list, FUN = funcao_sancoes)
