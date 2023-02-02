@@ -1,23 +1,46 @@
-#codigo para pesquisa no site @sançoes
+---
+---
+---
 
+1.1 - Importando as bibliotecas
 
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
 library(tidyverse)
 library(RSelenium)
 library(netstat)
 
+```
 
+1.2 - Criando uma conexção com o portal Firefox
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
 rs_driver_object <- rsDriver(browser = "firefox",
                              chromever = NULL,
+                             verbose = FALSE,
                              port = free_port())
+```
 
+1.3 - criando uma conexão cleinte
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
 remDr <-  rs_driver_object$client
+```
 
+1.4 objeto site
 
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
 site_sancoes <- "https://www.bec.sp.gov.br/sancoes_ui/aspx/consultaadministrativafornecedor.aspx"
+```
 
+1.5 carregando banco de dados
 
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
 cnpj_list <- c(45039237000114,27865757000102,12546935000157,07065868000119,60701190000104,60746948000112,03788306000142)
+```
 
+1.6 função para
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
 
 funcao_sancoes <- function(cnpj_empresas){
   remDr$navigate(site_sancoes)
@@ -27,5 +50,10 @@ funcao_sancoes <- function(cnpj_empresas){
     print("ok")
   }else {print("pendencia")}
   }
+```
 
+1.7 Looping para carraagar os dados
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
 results <- ?sapply(cnpj_list, FUN = funcao_sancoes)
+```
