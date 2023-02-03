@@ -1,5 +1,12 @@
 ---
----
+title: "Apresentação RMarkdown"
+author: "marcos"
+date: "02/02/2023"
+output:
+  word_document: default
+  pdf_document: default
+  html_document:
+    df_print: paged
 ---
 
 1.1 - Importando as bibliotecas
@@ -8,6 +15,8 @@
 library(tidyverse)
 library(RSelenium)
 library(netstat)
+library(readxl)
+library(writexl)
 
 ```
 
@@ -35,7 +44,7 @@ site_sancoes <- "https://www.bec.sp.gov.br/sancoes_ui/aspx/consultaadministrativ
 1.5 carregando banco de dados
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE}
-cnpj_list <- c(45039237000114,27865757000102,12546935000157,07065868000119,60701190000104,60746948000112,03788306000142)
+cnpj_list <- read_excel("banco_cnpj.xlsx")
 ```
 
 1.6 função para
@@ -44,9 +53,10 @@ cnpj_list <- c(45039237000114,27865757000102,12546935000157,07065868000119,60701
 
 funcao_sancoes <- function(cnpj_empresas){
   remDr$navigate(site_sancoes)
-  remDr$findElement(using= "id", "txtCNPJCPF")$sendKeysToElement(c(32232246884, key = "enter"))
+  remDr$findElement(using= "id", "txtCNPJCPF")$sendKeysToElement(c(cnpj_empresas, key = "enter"))
   Sys.sleep(2)
-  if(substr(remDr$findElement(using='css selector', 'table.styled:nth-child(3) > tbody:nth-child(1)')$getElementText(), 74, 102)=="Não foram encontradas sanções"){
+  css_obj <- 'table.styled:nth-child(3) > tbody:nth-child(1)'
+  if(substr(remDr$findElement(using='css selector', css_obj)$getElementText(), 74, 102)=="Não foram encontradas sanções"){
     print("ok")
   }else {print("pendencia")}
   }
@@ -55,5 +65,5 @@ funcao_sancoes <- function(cnpj_empresas){
 1.7 Looping para carraagar os dados
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE}
-results <- ?sapply(cnpj_list, FUN = funcao_sancoes)
+write_xlsx(cbind(cnpj_list,sapply(cnpj_list$cnpj, FUN = funcao_sancoes)), "resultado e-sancoes.xlsx")
 ```
