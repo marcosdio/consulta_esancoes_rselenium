@@ -15,7 +15,6 @@ rs_driver_object <- rsDriver(browser = "firefox",
 
 remDr <-  rs_driver_object$client
 
-
 site_sancoes <- "https://www.bec.sp.gov.br/sancoes_ui/aspx/consultaadministrativafornecedor.aspx"
 
 
@@ -33,4 +32,9 @@ funcao_sancoes <- function(cnpj_empresas){
   }
 
 write_xlsx(cbind(cnpj_list,sapply(cnpj_list$cnpj, FUN = funcao_sancoes)), "resultado e-sancoes.xlsx")
+
+
+
+?rsDriver
+?webElement
 
