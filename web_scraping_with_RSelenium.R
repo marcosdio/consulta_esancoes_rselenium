@@ -10,10 +10,10 @@ rs_driver_object <- rsDriver(browser = "firefox",
                              verbose=FALSE,
                              port = free_port())
 remDr <- rs_driver_object$client
-site_sancoes <- "https://www.bec.sp.gov.br/sancoes_ui/aspx/consultaadministrativafornecedor.aspx"
-cnpj_list <- read_excel("banco_cnpj.xlsx")
-funcao_sancoes <- function(cnpj_empresas){
-  remDr$navigate(site_sancoes)
+portal_sancoes <- "https://www.bec.sp.gov.br/sancoes_ui/aspx/consultaadministrativafornecedor.aspx"
+dataset_base <- read_excel("banco_cnpj.xlsx")
+funcao_consulta_sancoes <- function(cnpj_empresas){
+  remDr$navigate(portal_sancoes)
   remDr$findElement(using= "id", "txtCNPJCPF")$sendKeysToElement(c(cnpj_empresas, key = "enter"))
   Sys.sleep(2)
   css_obj <- 'table.styled:nth-child(3) > tbody:nth-child(1)'
@@ -21,5 +21,5 @@ funcao_sancoes <- function(cnpj_empresas){
             print("ok")
   }         else {print("pendencia")}
   }
-write_xlsx(cbind(cnpj_list,sapply(cnpj_list$cnpj, FUN = funcao_sancoes)), "resultado e-sancoes.xlsx")
+write_xlsx(cbind(cnpj_list,sapply(dataset_base$cnpj, FUN = funcao_consulta_sancoes)), "resultado e-sancoes.xlsx")
 
